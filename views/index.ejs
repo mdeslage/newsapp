@@ -15,7 +15,7 @@
 
 <body ng-app="newsApp">
   <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+    <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
       <ui-view></ui-view>
     </div>
 
@@ -36,7 +36,7 @@
             {{post.title}}
           </span>
           <span>
-           <a href="#/posts/{{$index}}">Comments</a>
+           <a href="#/posts/{{post._id}}">comments</a>
           </span>
         </span>
       </div>
