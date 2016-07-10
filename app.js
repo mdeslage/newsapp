@@ -63,6 +63,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// Add the Passport authentication
 app.use(passport.initialize());
 
 
