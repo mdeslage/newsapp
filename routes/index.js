@@ -6,6 +6,11 @@ var Comment = mongoose.model('Comment');
 var passport = require('passport');
 var User = mongoose.model('User');
 var jwt = require('express-jwt');
+// JWT middleware for authenticating tokens
+var auth = jwt({
+  secret: 'SECRET',
+  userProperty: 'payload'
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -139,10 +144,5 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-// JWT middleware for authenticating tokens
-var auth = jwt({
-  secret: 'SECRET',
-  userProperty: 'payload'
-});
 
 module.exports = router;
