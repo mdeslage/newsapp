@@ -4,10 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
 var mongoose = require('mongoose');
 // Connection for the database
 require('./models/Posts');
 require('./models/Comments')
+require('./models/Users');
+require('./config/passport');
 mongoose.connect('mongodb://localhost/news');
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -60,7 +63,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
+app.use(passport.initialize());
 
 
 module.exports = app;
