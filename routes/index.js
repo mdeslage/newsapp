@@ -5,6 +5,7 @@ var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
 var passport = require('passport');
 var User = mongoose.model('User');
+var jwt = require('express-jwt');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -21,8 +22,9 @@ router.get('/posts', function(req, res, next) {
 });
 
 // Create a new post in the database
-router.post('/posts', function(req, res, next) {
+router.post('/posts', auth, function(req, res, next) {
   var post = new Post(req.body);
+  post.author = req.payload.username;
 
   post.save(function(err, post) {
     if(err) { return next(err); }
@@ -67,7 +69,7 @@ router.get('/posts/:post', function(req, res, next) {
 })
 
 // Upvote a Post
-router.put('/posts/:post/upvote', function(req, res, next) {
+router.put('/posts/:post/upvote', auth, function(req, res, next) {
   req.post.upvote(function(err, post) {
     if(err) { return next(err); }
 
@@ -76,7 +78,7 @@ router.put('/posts/:post/upvote', function(req, res, next) {
 });
 
 // Upvote a comment
-router.put('/posts/:post/comments/:comment/upvote', function(req, res, next) {
+router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next) {
   req.comment.upvote(function(err, comment) {
     if(err) { return next(err); }
 
@@ -85,9 +87,10 @@ router.put('/posts/:post/comments/:comment/upvote', function(req, res, next) {
 });
 
 // Create a single comment for a post
-router.post('/posts/:post/comments', function(req, res, next) {
+router.post('/posts/:post/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
   comment.post = req.post;
+  comment.author = req.payload.username;
 
   comment.save(function(err, comment){
     if(err){ return next(err); }
@@ -134,6 +137,12 @@ router.post('/login', function(req, res, next) {
       return res.status(401).json(info);
     }
   })(req, res, next);
+});
+
+// JWT middleware for authenticating tokens
+var auth = jwt({
+  secret: 'SECRET',
+  userProperty: 'payload'
 });
 
 module.exports = router;
